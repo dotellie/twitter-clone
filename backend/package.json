@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/magnonellie/twitter-clone#readme",
   "dependencies": {
-    "koa": "^2.5.2"
+    "koa": "^2.5.2",
+    "pg-promise": "^8.4.6"
   }
 }

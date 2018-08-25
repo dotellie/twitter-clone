@@ -10,6 +10,7 @@ services:
         # TODO: manage passwords better
           - POSTGRES_PASSWORD=NA4;6418=V]*
           - POSTGRES_USER=twitter
+          - POSTGRES_DB=twitter-clone
         networks:
           - db
         restart: always
@@ -20,6 +21,7 @@ services:
         environment:
           - NODE_ENV=production
           - POSTGRES_PASSWORD=NA4;6418=V]*
+          - POSTGRES_USER=twitter
         user: node
         working_dir: /home/node/app
         volumes:
