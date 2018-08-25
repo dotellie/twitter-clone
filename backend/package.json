@@ -1,0 +1,22 @@
+{
+  "name": "twitter-clone-backend",
+  "version": "1.0.0",
+  "description": "The backend of Ellie's Twitter clone",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magnonellie/twitter-clone.git"
+  },
+  "author": "ellie",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/magnonellie/twitter-clone/issues"
+  },
+  "homepage": "https://github.com/magnonellie/twitter-clone#readme",
+  "dependencies": {
+    "koa": "^2.5.2"
+  }
+}
