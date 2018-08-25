@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+    db:
+        container_name: twitter-clone-db
+        image: postgres:10-alpine
+        expose:
+          - "5432"
+        environment:
+        # TODO: manage passwords better
+          - POSTGRES_PASSWORD=NA4;6418=V]*
+          - POSTGRES_USER=twitter
+        networks:
+          - db
+        restart: always
+
+    api:
+        container_name: twitter-clone-api
+        image: node
+        environment:
+          - NODE_ENV=production
+          - POSTGRES_PASSWORD=NA4;6418=V]*
+        user: node
+        working_dir: /home/node/app
+        volumes:
+          - ./backend:/home/node/app
+        expose:
+          - "3000"
+        command: "npm start"
+        links:
+          - db:twitter-clone-db
+        networks:
+          - api
+          - db
+        restart: always
+
+    twitter-clone-proxy:
+        container_name: twitter-clone-proxy
+        image: nginx:alpine
+        volumes:
+          - ./frontend/out:/usr/share/nginx/html:ro
+          - ./nginx.conf:/etc/nginx/nginx.conf:ro
+        networks:
+          - api
+        links:
+          - api:twitter-clone-api
+        ports:
+          - "8080:80"
+        restart: always
+
+networks:
+    db:
+    api:
