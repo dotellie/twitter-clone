@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const bodyparser = require('koa-body');
 const bcrypt = require('bcrypt');
 const { db } = require('../db.js');
+const passport = require('../auth.js');
 
 const router = new Router();
 
@@ -54,6 +55,39 @@ router.post('/register', bodyparser(), async ctx => {
   ctx.body = {
     status: 'ok'
   };
+});
+
+router.post('/login', bodyparser(), async ctx => {
+  // There might be a better way to handle this, but this is what I found worked.
+  await new Promise(resolve => {
+    passport.authenticate('local', async (err, user) => {
+      if (err) {
+        ctx.body = {
+          status: 'error',
+          message: 'An unkown error occured'
+        };
+        ctx.status = 500;
+        resolve();
+        return;
+      }
+
+      if (user === false) {
+        ctx.body = {
+          status: 'error',
+          message: 'The login credentials couldn\'t be verified. ' +
+            'Please check your handle and password'
+        };
+        ctx.status = 401;
+      } else {
+        await ctx.login(user);
+        ctx.body = {
+          status: 'ok',
+          user
+        };
+      }
+      resolve();
+    })(ctx);
+  });
 });
 
 module.exports = router;

@@ -1,11 +1,19 @@
 const Koa = require('koa');
 const Router = require('koa-router');
+const session = require('koa-session');
 const { db, initDB } = require('./db.js');
+const passport = require('./auth.js');
 
 const accounts = require('./routes/account.js');
 
 const app = new Koa();
 app.proxy = true;
+
+app.keys = ['aSecretKeyThatShouldBeReplaced'];
+app.use(session({}, app));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const router = new Router({
   prefix: '/api'
