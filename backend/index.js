@@ -5,6 +5,7 @@ const { db, initDB } = require('./db.js');
 const accounts = require('./routes/account.js');
 
 const app = new Koa();
+app.proxy = true;
 
 const router = new Router({
   prefix: '/api'
