@@ -2,6 +2,8 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const { db, initDB } = require('./db.js');
 
+const accounts = require('./routes/account.js');
+
 const app = new Koa();
 
 const router = new Router({
@@ -11,6 +13,8 @@ const router = new Router({
 router.get('/', async ctx => {
   ctx.body = 'Welcome to the Twitter clone API!';
 });
+
+router.use('/account', accounts.routes());
 
 app.use(router.routes());
 app.use(router.allowedMethods());

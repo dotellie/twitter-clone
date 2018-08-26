@@ -17,7 +17,7 @@ services:
 
     api:
         container_name: twitter-clone-api
-        image: node
+        image: node:latest
         environment:
           - NODE_ENV=production
           - POSTGRES_PASSWORD=NA4;6418=V]*
