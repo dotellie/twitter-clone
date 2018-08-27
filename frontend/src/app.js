@@ -8,9 +8,16 @@ import HomePage from './pages/home.vue';
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 
-document.body.innerHTML = `<div><home-page></home-page></div>`;
+document.body.innerHTML = `<div></div>`;
+
+const router = new VueRouter({
+  mode: 'history',
+  routes: [
+    { path: '/', component: HomePage }
+  ]
+});
 
 const app = new Vue({
-  components: { HomePage },
-  el: document.querySelector('div')
-});
+  router,
+  template: `<router-view></router-view>`
+}).$mount(document.querySelector('div'));
