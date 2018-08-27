@@ -5,6 +5,7 @@ const { db, initDB } = require('./db.js');
 const { passport } = require('./auth.js');
 
 const accounts = require('./routes/account.js');
+const tweet = require('./routes/tweet.js');
 
 const app = new Koa();
 app.proxy = true;
@@ -24,6 +25,7 @@ router.get('/', async ctx => {
 });
 
 router.use('/account', accounts.routes());
+router.use('/tweet', tweet.routes());
 
 app.use(router.routes());
 app.use(router.allowedMethods());
