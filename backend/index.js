@@ -2,7 +2,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const session = require('koa-session');
 const { db, initDB } = require('./db.js');
-const passport = require('./auth.js');
+const { passport } = require('./auth.js');
 
 const accounts = require('./routes/account.js');
 

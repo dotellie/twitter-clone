@@ -2,9 +2,13 @@ const Router = require('koa-router');
 const bodyparser = require('koa-body');
 const bcrypt = require('bcrypt');
 const { db } = require('../db.js');
-const passport = require('../auth.js');
+const { passport, checkAuth } = require('../auth.js');
 
 const router = new Router();
+
+const checkUnique = async (field, value) => !(await db.one(
+  `SELECT EXISTS(SELECT 1 FROM users WHERE ${field} = $1)`, value)
+).exists;
 
 router.post('/register', bodyparser(), async ctx => {
   const { name, handle, email, password } = ctx.request.body;
@@ -17,10 +21,6 @@ router.post('/register', bodyparser(), async ctx => {
     ctx.status = 400;
     return;
   }
-
-  const checkUnique = async (field, value) => !(await db.one(
-    `SELECT EXISTS(SELECT 1 FROM users WHERE ${field} = $1)`, value)
-  ).exists;
 
   const handleUnique = await checkUnique('handle', handle);
   const emailUnique = await checkUnique('email', email);
@@ -61,17 +61,7 @@ router.post('/login', bodyparser(), async ctx => {
   // There might be a better way to handle this, but this is what I found worked.
   await new Promise(resolve => {
     passport.authenticate('local', async (err, user) => {
-      if (err) {
-        ctx.body = {
-          status: 'error',
-          message: 'An unkown error occured'
-        };
-        ctx.status = 500;
-        resolve();
-        return;
-      }
-
-      if (user === false) {
+      if (err || user === false) {
         ctx.body = {
           status: 'error',
           message: 'The login credentials couldn\'t be verified. ' +
@@ -88,6 +78,74 @@ router.post('/login', bodyparser(), async ctx => {
       resolve();
     })(ctx);
   });
+});
+
+router.post('/update-info', bodyparser(), checkAuth, async ctx => {
+  try {
+    const { currentPassword, newPassword, newHandle } = ctx.request.body;
+
+    if (!newPassword && !newHandle) {
+      ctx.body = {
+        status: 'error',
+        message: 'No new data supplied'
+      };
+      ctx.status = 400;
+      return;
+    }
+
+    const { password: currentHash } = await db.one(
+      `SELECT password FROM users WHERE user_id = $1`,
+      ctx.state.user.id
+    );
+
+    if (!currentPassword || !await bcrypt.compare(currentPassword, currentHash)) {
+      ctx.body = {
+        status: 'error',
+        invalidFields: ['currentPassword']
+      };
+      ctx.status = 401;
+      return;
+    }
+
+    const toUpdate = {};
+
+    if (newHandle && newHandle !== ctx.state.user.handle) {
+      const handleUnique = await checkUnique('handle', newHandle);
+      if (!handleUnique) {
+        ctx.body = {
+          status: 'error',
+          notUnique: ['handle']
+        };
+        ctx.status = 409;
+        return;
+      }
+
+      toUpdate.handle = newHandle;
+    }
+
+    if (newPassword) {
+      const hash = await bcrypt.hash(newPassword, 10);
+      toUpdate.password = hash;
+    }
+
+    if (Object.keys(toUpdate).length > 0) {
+      await db.none(`UPDATE users SET ${
+        Object.keys(toUpdate).map(key => `${key} = $<${key}>`).join(', ')
+      } WHERE user_id = $<id>`, { id: ctx.state.user.id, ...toUpdate });
+      ctx.logout();
+      ctx.body = {
+        status: 'ok'
+      };
+    } else {
+      throw new Error('No fields set'); // This should never actually occur in practice
+    }
+  } catch (e) {
+    ctx.body = {
+      status: 'error',
+      message: 'An unknown error occured'
+    };
+    ctx.status = 500;
+  }
 });
 
 module.exports = router;

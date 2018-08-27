@@ -1,7 +1,7 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
-const { db, findUser } = require('./db.js');
+const { db, findUserById, findUserByHandle } = require('./db.js');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -9,7 +9,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    done(null, await findUser({ id }));
+    const user = await findUserById(id);
+    done(null, user);
   } catch (e) {
     done(e);
   }
@@ -24,7 +25,7 @@ passport.use(new LocalStrategy({
     if (!user) done(null, false);
 
     if (await bcrypt.compare(password, user.password)) {
-      done(null, await findUser({ handle }));
+      done(null, await findUserByHandle(handle));
     } else {
       done(null, false);
     }
@@ -33,4 +34,15 @@ passport.use(new LocalStrategy({
   }
 }));
 
-module.exports = passport;
+const checkAuth = (ctx, next) => {
+  if (ctx.isAuthenticated()) {
+    return next();
+  } else {
+    ctx.body = {
+      status: 'unathenticated',
+      message: 'You\'re not signed in. Please refresh the page.'
+    };
+  }
+};
+
+module.exports = { passport, checkAuth };

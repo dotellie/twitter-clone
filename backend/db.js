@@ -14,6 +14,19 @@ const db = pgp({
 
 const dbInitQuery = fs.readFileSync('./sql/db-structure.sql', 'utf8');
 
+const convertUser = user => {
+  if (!user) return false;
+
+  const avatarHash = crypto.createHash('md5').update(user['email']).digest('hex');
+  return {
+    id: user['user_id'],
+    name: user['full_name'],
+    handle: user['handle'],
+    email: user['email'],
+    avatarUrl: `//www.gravatar.com/avatar/${avatarHash}`
+  };
+};
+
 module.exports = {
   db,
   initDB: async () => {
@@ -35,28 +48,22 @@ module.exports = {
       throw new Error("Couldn't initialize database");
     }
   },
-  findUser: async params => {
-    const query = (key, value) => {
-      if (!params[key]) return;
-      return db.one(`SELECT * FROM users WHERE ${key} = $1 LIMIT 1`, value);
-    };
-
+  findUserById: async id => {
     let fetched;
     try {
-      fetched = await query('user_id', params.id) || await query('handle', params.handle);
+      fetched = await db.one(`SELECT * FROM users WHERE user_id = $1`, id);
     } catch (e) {
       throw e;
     }
-
-    if (!fetched) return false;
-
-    const avatarHash = crypto.createHash('md5').update(fetched['email']).digest('hex');
-    return {
-      id: fetched['user_id'],
-      name: fetched['full_name'],
-      handle: fetched['handle'],
-      email: fetched['email'],
-      avatarUrl: `//www.gravatar.com/avatar/${avatarHash}`
-    };
+    return convertUser(fetched);
+  },
+  findUserByHandle: async handle => {
+    let fetched;
+    try {
+      fetched = await db.one(`SELECT * FROM users WHERE handle = $1`, handle);
+    } catch (e) {
+      throw e;
+    }
+    return convertUser(fetched);
   }
 };
