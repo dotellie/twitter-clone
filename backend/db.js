@@ -65,5 +65,12 @@ module.exports = {
       throw e;
     }
     return convertUser(fetched);
+  },
+  getAllUsers: async () => {
+    try {
+      return (await db.manyOrNone(`SELECT * FROM users`)).map(convertUser);
+    } catch (e) {
+      throw e;
+    }
   }
 };

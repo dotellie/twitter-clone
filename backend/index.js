@@ -6,6 +6,7 @@ const { passport } = require('./auth.js');
 
 const accounts = require('./routes/account.js');
 const tweet = require('./routes/tweet.js');
+const user = require('./routes/user.js');
 
 const app = new Koa();
 app.proxy = true;
@@ -26,6 +27,7 @@ router.get('/', async ctx => {
 
 router.use('/account', accounts.routes());
 router.use('/tweet', tweet.routes());
+router.use('/user', user.routes());
 
 app.use(router.routes());
 app.use(router.allowedMethods());
