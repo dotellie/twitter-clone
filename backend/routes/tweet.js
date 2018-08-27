@@ -64,14 +64,54 @@ router.del('/:id', checkAuth, bodyparser(), async ctx => {
 router.get('/list-all', checkAuth, async ctx => {
   try {
     const tweets = await db.manyOrNone(`
-      SELECT * FROM tweets
-      WHERE user_id = ANY (
-        SELECT following_id FROM user_follows WHERE user_id = $1
+      SELECT t.tweet_id, t.user_id, t.tweet_contents, count(l.user_id) AS likes FROM tweets t
+      LEFT JOIN likes l ON l.tweet_id = t.tweet_id
+      WHERE t.user_id = ANY (
+        SELECT f.following_id FROM user_follows f WHERE f.user_id = $1
       )
-      OR user_id = $1
-      ORDER BY tweet_id DESC
+      OR t.user_id = $1
+      GROUP BY t.tweet_id
+      ORDER BY t.tweet_id DESC
     `, ctx.state.user.id);
     ctx.body = tweets;
+  } catch (e) {
+    ctx.body = {
+      status: 'error',
+      message: 'An unkown error occured'
+    };
+    ctx.status = 500;
+  }
+});
+
+router.post('/like/:id', checkAuth, async ctx => {
+  try {
+    await db.none(
+      `INSERT INTO likes (user_id, tweet_id) VALUES ($1, $2)`,
+      [ctx.state.user.id, ctx.params.id]
+    );
+
+    ctx.body = {
+      status: 'ok'
+    };
+  } catch (e) {
+    ctx.body = {
+      status: 'error',
+      message: 'An unkown error occured'
+    };
+    ctx.status = 500;
+  }
+});
+
+router.post('/dislike/:id', checkAuth, async ctx => {
+  try {
+    await db.none(
+      `DELETE FROM likes WHERE user_id = $1 AND tweet_id = $2`,
+      [ctx.state.user.id, ctx.params.id]
+    );
+
+    ctx.body = {
+      status: 'ok'
+    };
   } catch (e) {
     ctx.body = {
       status: 'error',
