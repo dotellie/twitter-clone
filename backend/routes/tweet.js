@@ -73,7 +73,10 @@ router.get('/list-all', checkAuth, async ctx => {
       GROUP BY t.tweet_id
       ORDER BY t.tweet_id DESC
     `, ctx.state.user.id);
-    ctx.body = tweets;
+    ctx.body = {
+      status: 'ok',
+      tweets
+    };
   } catch (e) {
     ctx.body = {
       status: 'error',

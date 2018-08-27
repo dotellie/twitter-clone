@@ -6,7 +6,10 @@ const router = new Router();
 
 router.get('/list-all', checkAuth, async ctx => {
   try {
-    ctx.body = await getAllUsers(ctx.state.user.id);
+    ctx.body = {
+      status: 'ok',
+      users: await getAllUsers(ctx.state.user.id)
+    };
   } catch (e) {
     ctx.body = {
       status: 'error',
@@ -65,7 +68,10 @@ router.get('/:id', checkAuth, async ctx => {
   try {
     const user = await findUserById(ctx.params.id, ctx.state.user.id);
     delete user.email; // Obfuscate user email
-    ctx.body = user;
+    ctx.body = {
+      status: 'ok',
+      user
+    };
   } catch (e) {
     ctx.body = {
       status: 'error',
