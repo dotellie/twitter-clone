@@ -23,6 +23,7 @@ const convertUser = user => {
     name: user['full_name'],
     handle: user['handle'],
     email: user['email'],
+    following: Boolean(user['following']),
     avatarUrl: `//www.gravatar.com/avatar/${avatarHash}`
   };
 };
@@ -48,10 +49,19 @@ module.exports = {
       throw new Error("Couldn't initialize database");
     }
   },
-  findUserById: async id => {
+  findUserById: async (id, checkFollowId) => {
     let fetched;
     try {
-      fetched = await db.one(`SELECT * FROM users WHERE user_id = $1`, id);
+      if (typeof checkFollowId !== 'undefined') {
+        fetched = await db.one(`
+          SELECT u.*, f AS following FROM users u
+          LEFT JOIN user_follows f ON f.user_id = $1 AND f.following_id = $2
+          WHERE u.user_id = $1
+        `, [checkFollowId, id]);
+        console.log(fetched);
+      } else {
+        fetched = await db.one(`SELECT * FROM users WHERE user_id = $1`, id);
+      }
     } catch (e) {
       throw e;
     }
@@ -66,9 +76,12 @@ module.exports = {
     }
     return convertUser(fetched);
   },
-  getAllUsers: async () => {
+  getAllUsers: async checkFollowId => {
     try {
-      return (await db.manyOrNone(`SELECT * FROM users`)).map(convertUser);
+      return (await db.manyOrNone(`
+        SELECT u.*, f AS following FROM users u
+        LEFT JOIN user_follows f ON f.user_id = $1 AND f.following_id = u.user_id
+      `, checkFollowId)).map(convertUser);
     } catch (e) {
       throw e;
     }

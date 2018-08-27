@@ -4,9 +4,9 @@ const { checkAuth } = require('../auth.js');
 
 const router = new Router();
 
-router.get('/list-all', async ctx => {
+router.get('/list-all', checkAuth, async ctx => {
   try {
-    ctx.body = await getAllUsers();
+    ctx.body = await getAllUsers(ctx.state.user.id);
   } catch (e) {
     ctx.body = {
       status: 'error',
@@ -61,9 +61,9 @@ router.post('/:id/unfollow', checkAuth, async ctx => {
   }
 });
 
-router.get('/:id', async ctx => {
+router.get('/:id', checkAuth, async ctx => {
   try {
-    const user = await findUserById(ctx.params.id);
+    const user = await findUserById(ctx.params.id, ctx.state.user.id);
     delete user.email; // Obfuscate user email
     ctx.body = user;
   } catch (e) {
