@@ -1,6 +1,7 @@
 const Koa = require('koa');
 const Router = require('koa-router');
 const session = require('koa-session');
+const cors = require('@koa/cors');
 const { db, initDB } = require('./db.js');
 const { passport } = require('./auth.js');
 
@@ -10,6 +11,8 @@ const user = require('./routes/user.js');
 
 const app = new Koa();
 app.proxy = true;
+
+app.use(cors());
 
 app.keys = ['aSecretKeyThatShouldBeReplaced'];
 app.use(session({}, app));
