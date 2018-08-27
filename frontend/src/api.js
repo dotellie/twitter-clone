@@ -7,8 +7,6 @@ export default class API {
   }
 
   static async request (method, path, body) {
-    console.log(JSON.stringify(body));
-
     const resp = await fetch(this.basePath + path, {
       method,
       body: JSON.stringify(body),
