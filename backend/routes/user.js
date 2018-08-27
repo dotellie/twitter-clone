@@ -1,5 +1,5 @@
 const Router = require('koa-router');
-const { db, getAllUsers } = require('../db.js');
+const { db, getAllUsers, findUserById } = require('../db.js');
 const { checkAuth } = require('../auth.js');
 
 const router = new Router();
@@ -52,6 +52,20 @@ router.post('/:id/unfollow', checkAuth, async ctx => {
     ctx.body = {
       status: 'ok'
     };
+  } catch (e) {
+    ctx.body = {
+      status: 'error',
+      message: 'An unkown error occured'
+    };
+    ctx.status = 500;
+  }
+});
+
+router.get('/:id', async ctx => {
+  try {
+    const user = await findUserById(ctx.params.id);
+    delete user.email; // Obfuscate user email
+    ctx.body = user;
   } catch (e) {
     ctx.body = {
       status: 'error',
