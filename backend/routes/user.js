@@ -25,7 +25,7 @@ router.post('/:id/follow', checkAuth, async ctx => {
       status: 'error',
       message: 'You can\'t follow yourself.'
     };
-    ctx.body = 400;
+    ctx.status = 400;
     return;
   }
 
