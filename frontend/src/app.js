@@ -27,12 +27,6 @@ const router = new VueRouter({
 
 const app = new Vue({
   router,
-  created () {
-    router.beforeEach((to, _, next) => {
-      this.showNav = to.path !== '/';
-      next();
-    });
-  },
   data () {
     return {
       showNav: false
@@ -41,5 +35,9 @@ const app = new Vue({
   components: {
     TwitterShell
   },
-  template: `<twitter-shell :show-nav="showNav"><router-view></router-view></twitter-shell>`
+  template: `
+    <twitter-shell :show-nav="$route.path !== '/'">
+      <router-view></router-view>
+    </twitter-shell>
+  `
 }).$mount(document.querySelector('div'));
