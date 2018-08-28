@@ -18,12 +18,13 @@ router.post('/insert', checkAuth, bodyparser(), async ctx => {
   }
 
   try {
-    await db.none(
-      `INSERT INTO tweets (user_id, tweet_contents) VALUES ($1, $2)`,
+    const tweet = await db.one(
+      `INSERT INTO tweets (user_id, tweet_contents) VALUES ($1, $2) RETURNING *`,
       [ctx.state.user.id, contents]
     );
     ctx.body = {
-      status: 'ok'
+      status: 'ok',
+      tweet
     };
   } catch (e) {
     ctx.body = {
