@@ -80,6 +80,13 @@ router.post('/login', bodyparser(), async ctx => {
   });
 });
 
+router.post('/logout', checkAuth, async ctx => {
+  ctx.logout();
+  ctx.body = {
+    status: 'ok'
+  };
+});
+
 router.post('/update-info', bodyparser(), checkAuth, async ctx => {
   try {
     const { currentPassword, newPassword, newHandle } = ctx.request.body;
