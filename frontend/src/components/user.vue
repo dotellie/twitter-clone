@@ -10,7 +10,7 @@
     </router-link>
 
     <el-button
-      v-if="!big"
+      v-if="!big && !isSelf"
       style="float: right;"
       @click="toggleFollow"
       round
@@ -81,6 +81,8 @@
         handle: '',
         avatarUrl: '',
         following: false,
+
+        isSelf: false,
       };
     },
     computed: {
@@ -120,6 +122,8 @@
           this.handle = user.handle;
           this.avatarUrl = user.avatarUrl;
           this.following = user.following;
+
+          this.isSelf = API.getUser().id === id;
         }
       },
       async toggleFollow () {
