@@ -1,5 +1,16 @@
 <template>
   <div>
+    <el-card>
+      <el-input
+        type="textarea"
+        placeholder="Tweet something!"
+        v-model="tweetContent"
+        :rows="4">
+      </el-input>
+      <el-button type="primary" style="margin: 1em 0; float: right;" @click="tweet">
+        Tweet
+      </el-button>
+    </el-card>
     <div v-for="tweet in tweets" :key="tweet.id">
       <twitter-tweet :tweet="tweet"></twitter-tweet>
     </div>
@@ -23,11 +34,21 @@
     },
     data () {
       return {
-        tweets: []
+        tweets: [],
+        tweetContent: ''
       }
     },
     components: {
       TwitterTweet
+    },
+    methods: {
+      async tweet () {
+        const { tweet } = await API.post('/tweet/insert', {
+          contents: this.tweetContent
+        });
+        this.tweets.unshift(tweet);
+        this.tweetContent = '';
+      }
     }
   };
 </script>
