@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="twitter-home">
     <el-card>
       <el-input
         type="textarea"
@@ -54,6 +54,10 @@
 </script>
 
 <style>
+  .twitter-home .el-card {
+    margin: 2em 0;
+  }
+
   .explore-prompt {
     display: flex;
     justify-content: center;

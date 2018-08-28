@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="twitter-explore">
     <el-card v-for="user in users" :key="user.id">
       <twitter-user :user="user.id"></twitter-user>
     </el-card>
@@ -24,3 +24,9 @@
     }
   }
 </script>
+
+<style>
+  .twitter-explore .el-card {
+    margin: 2em 0;
+  }
+</style>
