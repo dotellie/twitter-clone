@@ -3,6 +3,8 @@ import '../theme/index.css';
 import ElementUI from 'element-ui';
 import VueRouter from 'vue-router';
 
+import TwitterShell from './shell.vue';
+
 import IndexPage from './pages/index.vue';
 import HomePage from './pages/home.vue';
 import ExplorePage from './pages/explore.vue';
@@ -23,5 +25,19 @@ const router = new VueRouter({
 
 const app = new Vue({
   router,
-  template: `<router-view></router-view>`
+  created () {
+    router.beforeEach((to, _, next) => {
+      this.showNav = to.path !== '/';
+      next();
+    });
+  },
+  data () {
+    return {
+      showNav: false
+    };
+  },
+  components: {
+    TwitterShell
+  },
+  template: `<twitter-shell :show-nav="showNav"><router-view></router-view></twitter-shell>`
 }).$mount(document.querySelector('div'));
