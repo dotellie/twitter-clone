@@ -1,5 +1,6 @@
 <template>
   <div class="twitter-explore">
+    <h1>Explore</h1>
     <el-card v-for="user in users" :key="user.id">
       <twitter-user :user="user.id"></twitter-user>
     </el-card>

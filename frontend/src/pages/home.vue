@@ -1,5 +1,6 @@
 <template>
   <div class="twitter-home">
+    <h1>Timeline</h1>
     <el-card>
       <el-input
         type="textarea"
