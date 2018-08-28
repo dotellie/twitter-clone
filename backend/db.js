@@ -56,9 +56,8 @@ module.exports = {
         fetched = await db.one(`
           SELECT u.*, f AS following FROM users u
           LEFT JOIN user_follows f ON f.user_id = $1 AND f.following_id = $2
-          WHERE u.user_id = $1
+          WHERE u.user_id = $2
         `, [checkFollowId, id]);
-        console.log(fetched);
       } else {
         fetched = await db.one(`SELECT * FROM users WHERE user_id = $1`, id);
       }
