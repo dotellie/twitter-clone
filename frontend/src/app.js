@@ -8,6 +8,7 @@ import TwitterShell from './shell.vue';
 import IndexPage from './pages/index.vue';
 import HomePage from './pages/home.vue';
 import ExplorePage from './pages/explore.vue';
+import AccountSettings from './pages/account.vue';
 
 Vue.use(ElementUI);
 Vue.use(VueRouter);
@@ -19,7 +20,8 @@ const router = new VueRouter({
   routes: [
     { path: '/', component: IndexPage },
     { path: '/home', component: HomePage },
-    { path: '/explore', component: ExplorePage }
+    { path: '/explore', component: ExplorePage },
+    { path: '/account', component: AccountSettings }
   ]
 });
 
