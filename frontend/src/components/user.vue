@@ -1,5 +1,5 @@
 <template>
-  <div :class="'twitter-user ' + bigClass">
+  <div :class="'twitter-user ' + (this.big ? 'big' : '')">
     <router-link :to="'/user/' + user" class="twitter-user-link">
       <img :src="avatarUrl + (big ? '?s=200' : '')" class="profile-picture">
 
@@ -14,8 +14,8 @@
       style="float: right;"
       @click="toggleFollow"
       round
-      :type="buttonType">
-      {{buttonText}}
+      :type="this.following ? 'primary' : ''">
+      {{this.following ? 'Unfollow' : 'Follow'}}
     </el-button>
   </div>
 </template>
@@ -84,17 +84,6 @@
 
         isSelf: false,
       };
-    },
-    computed: {
-      buttonType () {
-        return this.following ? 'primary' : '';
-      },
-      buttonText () {
-        return this.following ? 'Unfollow' : 'Follow';
-      },
-      bigClass () {
-        return this.big ? 'big' : '';
-      }
     },
     created () {
       if (this.user) {
