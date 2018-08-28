@@ -65,3 +65,6 @@ typings/
 
 # Element theme
 /frontend/theme
+
+# Frontend build
+/frontend/dist
