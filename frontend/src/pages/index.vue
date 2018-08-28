@@ -48,6 +48,11 @@
   import { Notification } from 'element-ui';
 
   export default {
+    created () {
+      if (API.getUser()) {
+        this.$router.replace('/home');
+      }
+    },
     data () {
       return {
         login: {
@@ -96,9 +101,10 @@
         this.$refs.loginForm.validate(async valid => {
           if (valid) {
             try {
-              const { status } = await API.post('/account/login', this.login);
+              const { status, user } = await API.post('/account/login', this.login);
               if (status === 'ok') {
-                // TODO: Goto home
+                API.setUser(user);
+                this.$router.push('/home');
               }
             } catch (e) {}
           }
@@ -110,7 +116,6 @@
           if (valid) {
             try {
               const resp = await API.post('/account/register', this.register);
-              console.log(resp);
 
               if (resp.status === 'ok') {
                 Notification({

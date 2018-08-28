@@ -3,6 +3,7 @@ import { Notification } from 'element-ui';
 
 export default class API {
   static get basePath () {
+    // TODO: change path and credentials
     return '//localhost:8080/api';
   }
 
@@ -14,7 +15,7 @@ export default class API {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      credentials: 'same-origin'
+      credentials: 'include'
     });
 
     if (!resp.ok) {
@@ -33,6 +34,7 @@ export default class API {
     if (respBody.status === 'ok') {
       return respBody;
     } else if (respBody.status === 'unathenticated') {
+      this.setUser();
       location.pathname = '/';
     } else {
       throw respBody;
@@ -50,4 +52,18 @@ export default class API {
   static del (path) {
     return this.request('DELETE', path);
   }
+
+  static setUser (user) {
+    if (!user) {
+      window.localStorage.removeItem('currentUser');
+    } else {
+      window.localStorage.setItem('currentUser', JSON.stringify(user));
+    }
+  }
+
+  static getUser () {
+    return JSON.parse(window.localStorage.getItem('currentUser'));
+  }
 }
+
+window.API = API;

@@ -4,6 +4,7 @@ import ElementUI from 'element-ui';
 import VueRouter from 'vue-router';
 
 import IndexPage from './pages/index.vue';
+import HomePage from './pages/home.vue';
 
 Vue.use(ElementUI);
 Vue.use(VueRouter);
@@ -13,7 +14,8 @@ document.body.innerHTML = `<div></div>`;
 const router = new VueRouter({
   mode: 'history',
   routes: [
-    { path: '/', component: IndexPage }
+    { path: '/', component: IndexPage },
+    { path: '/home', component: HomePage }
   ]
 });
 
