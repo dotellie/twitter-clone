@@ -3,6 +3,11 @@
     <div v-for="tweet in tweets" :key="tweet.id">
       <twitter-tweet :tweet="tweet"></twitter-tweet>
     </div>
+    <div v-if="tweets.length === 0" class="explore-prompt">
+      <el-button type="primary">
+        <router-link to="/explore">Go find some people to follow</router-link>
+      </el-button>
+    </div>
   </div>
 </template>
 
@@ -26,3 +31,15 @@
     }
   };
 </script>
+
+<style>
+  .explore-prompt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .explore-prompt a {
+    color: white;
+  }
+</style>

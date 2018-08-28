@@ -5,6 +5,7 @@ import VueRouter from 'vue-router';
 
 import IndexPage from './pages/index.vue';
 import HomePage from './pages/home.vue';
+import ExplorePage from './pages/explore.vue';
 
 Vue.use(ElementUI);
 Vue.use(VueRouter);
@@ -15,7 +16,8 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', component: IndexPage },
-    { path: '/home', component: HomePage }
+    { path: '/home', component: HomePage },
+    { path: '/explore', component: ExplorePage }
   ]
 });
 
