@@ -14,7 +14,7 @@
       style="float: right;"
       @click="toggleFollow"
       round
-      :type="this.following ? 'primary' : ''">
+      :type="this.following ? '' : 'primary'">
       {{this.following ? 'Unfollow' : 'Follow'}}
     </el-button>
   </div>
