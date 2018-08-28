@@ -1,7 +1,7 @@
 <template>
   <div class="twitter-account-settings">
     <h1>Account Settings</h1>
-    <span>
+    <span class="page-info">
       Leave the new password field empty if you don't want to change it.
       Your current password is always required to make changes.
     </span>
@@ -84,6 +84,11 @@
 </script>
 
 <style>
+  .twitter-account-settings .page-info {
+    display: block;
+    margin-bottom: 2em;
+  }
+
   .twitter-account-settings hr {
     margin: 2em 0;
     opacity: 0.5;
