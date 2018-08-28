@@ -3,8 +3,7 @@ import { Notification } from 'element-ui';
 
 export default class API {
   static get basePath () {
-    // TODO: change path and credentials
-    return '//localhost:8080/api';
+    return '/api';
   }
 
   static async request (method, path, body) {
@@ -15,7 +14,7 @@ export default class API {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      credentials: 'include'
+      credentials: 'same-origin'
     });
 
     const respBody = await resp.json();
