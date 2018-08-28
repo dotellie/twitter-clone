@@ -24,7 +24,7 @@ router.post('/insert', checkAuth, bodyparser(), async ctx => {
     );
     ctx.body = {
       status: 'ok',
-      tweet
+      tweet: { likes: [], ...tweet }
     };
   } catch (e) {
     ctx.body = {
