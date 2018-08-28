@@ -81,4 +81,26 @@ router.get('/:id', checkAuth, async ctx => {
   }
 });
 
+router.get('/:id/tweets', checkAuth, async ctx => {
+  try {
+    const tweets = await db.manyOrNone(`
+      SELECT t.tweet_id, t.user_id, t.tweet_contents, count(l.user_id) AS likes FROM tweets t
+      LEFT JOIN likes l ON l.tweet_id = t.tweet_id
+      WHERE t.user_id = $1
+      GROUP BY t.tweet_id
+      ORDER BY t.tweet_id DESC
+    `, ctx.params.id);
+    ctx.body = {
+      status: 'ok',
+      tweets
+    };
+  } catch (e) {
+    ctx.body = {
+      status: 'error',
+      message: 'An unkown error occured'
+    };
+    ctx.status = 500;
+  }
+});
+
 module.exports = router;
