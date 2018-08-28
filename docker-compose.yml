@@ -40,7 +40,7 @@ services:
         container_name: twitter-clone-proxy
         image: nginx:alpine
         volumes:
-          - ./frontend/out:/usr/share/nginx/html:ro
+          - ./frontend/dist:/usr/share/nginx/html:ro
           - ./nginx.conf:/etc/nginx/nginx.conf:ro
         networks:
           - api
