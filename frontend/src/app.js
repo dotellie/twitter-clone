@@ -9,6 +9,7 @@ import IndexPage from './pages/index.vue';
 import HomePage from './pages/home.vue';
 import ExplorePage from './pages/explore.vue';
 import AccountSettings from './pages/account.vue';
+import UserFeed from './pages/user.vue';
 
 Vue.use(ElementUI);
 Vue.use(VueRouter);
@@ -21,7 +22,8 @@ const router = new VueRouter({
     { path: '/', component: IndexPage },
     { path: '/home', component: HomePage },
     { path: '/explore', component: ExplorePage },
-    { path: '/account', component: AccountSettings }
+    { path: '/account', component: AccountSettings },
+    { path: '/user/:id', component: UserFeed }
   ]
 });
 

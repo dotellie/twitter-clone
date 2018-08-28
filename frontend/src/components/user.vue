@@ -1,13 +1,20 @@
 <template>
-  <div class="twitter-user">
-    <img :src="avatarUrl" class="profile-picture">
+  <div :class="'twitter-user ' + bigClass">
+    <router-link :to="'/user/' + user" class="twitter-user-link">
+      <img :src="avatarUrl + (big ? '?s=200' : '')" class="profile-picture">
 
-    <div class="twitter-user-names">
-      <span>{{name}}</span>
-      <span>@{{handle}}</span>
-    </div>
+      <div class="twitter-user-names">
+        <span>{{name}}</span>
+        <span>@{{handle}}</span>
+      </div>
+    </router-link>
 
-    <el-button style="float: right;" @click="toggleFollow" round :type="buttonType">
+    <el-button
+      v-if="!big"
+      style="float: right;"
+      @click="toggleFollow"
+      round
+      :type="buttonType">
       {{buttonText}}
     </el-button>
   </div>
@@ -62,9 +69,12 @@
   const userCache = new UserCache();
 
   export default {
-    props: [
-      'user'
-    ],
+    props: {
+      user: {},
+      big: {
+        type: Boolean
+      }
+    },
     data () {
       return {
         name: '',
@@ -79,6 +89,9 @@
       },
       buttonText () {
         return this.following ? 'Unfollow' : 'Follow';
+      },
+      bigClass () {
+        return this.big ? 'big' : '';
       }
     },
     created () {
@@ -132,8 +145,26 @@
     align-items: center;
   }
 
+  .twitter-user.big {
+    flex-direction: column;
+    font-size: 2em;
+  }
+
+  .twitter-user-link {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    color: unset;
+    text-decoration: unset;
+  }
+
   .twitter-user .profile-picture {
     border-radius: 50%;
+  }
+
+  .twitter-user.big .profile-picture {
+    width: 5em;
+    height: auto;
   }
 
   .twitter-user .twitter-user-names {
