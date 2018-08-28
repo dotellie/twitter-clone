@@ -1,8 +1,8 @@
 <template>
   <div class="twitter-user-feed">
     <twitter-user big :user="$route.params.id"></twitter-user>
-    <div v-for="tweet in tweets" :key="tweet.id">
-      <twitter-tweet :tweet="tweet"></twitter-tweet>
+    <div v-for="tweet in tweets" :key="tweet['tweet_id']">
+      <twitter-tweet :tweet="tweet" @tweet-remove="removeTweet(tweet['tweet_id'])"></twitter-tweet>
     </div>
     <div v-if="tweets.length === 0" class="no-tweets-prompt">
       This user hasn't tweeted anything yet...
@@ -29,6 +29,11 @@
     components: {
       TwitterUser,
       TwitterTweet
+    },
+    methods: {
+      removeTweet (id) {
+        this.tweets = this.tweets.filter(tweet => tweet['tweet_id'] !== id);
+      }
     }
   };
 </script>

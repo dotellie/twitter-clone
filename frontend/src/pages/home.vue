@@ -12,8 +12,8 @@
         Tweet
       </el-button>
     </el-card>
-    <div v-for="tweet in tweets" :key="tweet.id">
-      <twitter-tweet :tweet="tweet"></twitter-tweet>
+    <div v-for="tweet in tweets" :key="tweet['tweet_id']">
+      <twitter-tweet :tweet="tweet" @tweet-remove="removeTweet(tweet['tweet_id'])"></twitter-tweet>
     </div>
     <div v-if="tweets.length === 0" class="explore-prompt">
       <el-button type="primary">
@@ -49,6 +49,11 @@
         });
         this.tweets.unshift(tweet);
         this.tweetContent = '';
+      },
+      removeTweet (id) {
+        console.log(typeof id, id);
+
+        this.tweets = this.tweets.filter(tweet => tweet['tweet_id'] !== id);
       }
     }
   };
