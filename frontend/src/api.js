@@ -18,10 +18,6 @@ export default class API {
       credentials: 'include'
     });
 
-    if (!resp.ok) {
-      throw await resp.json();
-    }
-
     const respBody = await resp.json();
 
     if (respBody.message) {
@@ -29,6 +25,10 @@ export default class API {
         title: 'Information',
         message: respBody.message
       });
+    }
+
+    if (!resp.ok) {
+      throw respBody;
     }
 
     if (respBody.status === 'ok') {
