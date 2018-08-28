@@ -65,7 +65,10 @@ router.del('/:id', checkAuth, bodyparser(), async ctx => {
 router.get('/list-all', checkAuth, async ctx => {
   try {
     const tweets = await db.manyOrNone(`
-      SELECT t.tweet_id, t.user_id, t.tweet_contents, count(l.user_id) AS likes FROM tweets t
+      SELECT
+        t.tweet_id, t.user_id, t.tweet_contents,
+        ARRAY_REMOVE(ARRAY_AGG(l.user_id), NULL) AS likes
+      FROM tweets t
       LEFT JOIN likes l ON l.tweet_id = t.tweet_id
       WHERE t.user_id = ANY (
         SELECT f.following_id FROM user_follows f WHERE f.user_id = $1
