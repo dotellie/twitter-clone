@@ -91,7 +91,8 @@ router.post('/update-info', bodyparser(), checkAuth, async ctx => {
   try {
     const { currentPassword, newPassword, newHandle } = ctx.request.body;
 
-    if (!newPassword && !newHandle) {
+    const hasNewHandle = newHandle && newHandle !== ctx.state.user.handle;
+    if (!newPassword && !hasNewHandle) {
       ctx.body = {
         status: 'error',
         message: 'No new data supplied'
