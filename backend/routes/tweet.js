@@ -87,7 +87,7 @@ router.get('/list-all', checkAuth, async ctx => {
   }
 });
 
-router.post('/like/:id', checkAuth, async ctx => {
+router.post('/:id/like', checkAuth, async ctx => {
   try {
     await db.none(
       `INSERT INTO likes (user_id, tweet_id) VALUES ($1, $2)`,
@@ -106,7 +106,7 @@ router.post('/like/:id', checkAuth, async ctx => {
   }
 });
 
-router.post('/dislike/:id', checkAuth, async ctx => {
+router.post('/:id/dislike', checkAuth, async ctx => {
   try {
     await db.none(
       `DELETE FROM likes WHERE user_id = $1 AND tweet_id = $2`,
