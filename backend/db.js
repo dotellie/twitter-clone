@@ -14,6 +14,7 @@ const db = pgp({
 
 const dbInitQuery = fs.readFileSync('./sql/db-structure.sql', 'utf8');
 
+/// Converts a raw database user result to a result to be returned through the API.
 const convertUser = user => {
   if (!user) return false;
 
@@ -29,7 +30,9 @@ const convertUser = user => {
 };
 
 module.exports = {
+  /// The main database instance.
   db,
+  /// Initializes the database if tabels aren't already present.
   initDB: async () => {
     let success = false;
 
@@ -49,6 +52,8 @@ module.exports = {
       throw new Error("Couldn't initialize database");
     }
   },
+  /// Finds a user by their ID. Supply `checkFollowId` to check if the current user is following the
+  /// found user.
   findUserById: async (id, checkFollowId) => {
     let fetched;
     try {
@@ -66,6 +71,7 @@ module.exports = {
     }
     return convertUser(fetched);
   },
+  /// Finds a user by their handle.
   findUserByHandle: async handle => {
     let fetched;
     try {
@@ -75,6 +81,8 @@ module.exports = {
     }
     return convertUser(fetched);
   },
+  /// Queries all users. Supply `checkFollowId` to check if the current user is following the
+  /// found users.
   getAllUsers: async checkFollowId => {
     try {
       return (await db.manyOrNone(`

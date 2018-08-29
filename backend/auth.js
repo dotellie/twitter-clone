@@ -34,6 +34,7 @@ passport.use(new LocalStrategy({
   }
 }));
 
+/// Checks that a user is authenticated when applied as a middleware.
 const checkAuth = (ctx, next) => {
   if (ctx.isAuthenticated()) {
     return next();
