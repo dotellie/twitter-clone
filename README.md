@@ -1,6 +1,8 @@
 # Twitter Clone [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/Flet/semistandard)
 Simple Twitter clone made with Koa and Vue.js
 
+![](https://i.imgur.com/jp5Sb7W.png)
+
 ## Dependencies
 Node and npm are required in order to build the app while Docker and docker-compose are required to run the app. Make sure you have what you need installed.
 
