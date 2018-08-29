@@ -2,7 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const pgp = require('pg-promise')();
 
-const CONNECTION_RETY_ATTEMPTS = 5;
+const CONNECTION_RETRY_ATTEMPTS = 5;
 
 const db = pgp({
   host: 'twitter-clone-db',
@@ -36,7 +36,7 @@ module.exports = {
   initDB: async () => {
     let success = false;
 
-    for (let i = 0; i < CONNECTION_RETY_ATTEMPTS; i++) {
+    for (let i = 0; i < CONNECTION_RETRY_ATTEMPTS; i++) {
       try {
         await db.multi(dbInitQuery);
         success = true;
