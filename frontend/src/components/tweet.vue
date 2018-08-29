@@ -19,7 +19,7 @@
         placement="top"
         width="160"
         v-model="deletePromptVisible">
-        <p>Are you sure to delete this tweet?</p>
+        <p>Are you sure you want to delete this tweet?</p>
         <div style="text-align: right;">
           <el-button size="mini" type="text" @click="deletePromptVisible = false">Cancel</el-button>
           <el-button type="primary" size="mini" @click="deleteTweet">Confirm</el-button>
