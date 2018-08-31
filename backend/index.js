@@ -12,9 +12,7 @@ const user = require('./routes/user.js');
 const app = new Koa();
 app.proxy = true;
 
-app.use(cors({
-  credentials: true
-}));
+app.use(cors());
 
 app.keys = ['aSecretKeyThatShouldBeReplaced'];
 app.use(session({}, app));
